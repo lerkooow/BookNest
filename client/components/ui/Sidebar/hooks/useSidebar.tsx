@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 export const mainLinks = [
   { label: "Library", href: "/", icon: Library },
   { label: "Add my books", href: "/add-books", icon: BookOpen },
-  { label: "Statistics", href: "/statistics", icon: ChartPie },
+  { label: "Statistics", href: "/stats", icon: ChartPie },
 ];
 
 export const useSidebar = () => {

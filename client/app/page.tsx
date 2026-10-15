@@ -1,7 +1,5 @@
-export default function Home() {
-  return (
-    <div>
-      <main>Hello</main>
-    </div>
-  );
+import { LibraryPage } from "@/components/books/LibraryPage";
+
+export default function page() {
+  return <LibraryPage />;
 }

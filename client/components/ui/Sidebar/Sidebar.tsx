@@ -64,11 +64,12 @@ export const Sidebar = () => {
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex h-dvh flex-col border-r border-neutral-200 bg-white px-3 py-5 will-change-transform transition-[width,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          collapsed ? "w-[76px]" : "w-[260px]"
-        } ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 flex h-dvh flex-col border-r bg-[#faf9f6] border-neutral-200
+           px-3 py-5 will-change-transform transition-[width,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+             collapsed ? "w-[76px]" : "w-[260px]"
+           } ${
+             mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+           }`}
       >
         <SidebarHeader
           collapsed={collapsed}
