@@ -9,6 +9,7 @@ export interface Book {
   title: string;
   author: string;
   genre: string;
+  description: string | null;
   coverUrl: string | null;
   status: BookStatus;
   rating: number | null;
@@ -21,10 +22,13 @@ export interface CreateBookInput {
   title: string;
   author: string;
   genre: string;
+  description?: string;
   coverUrl?: string;
   status?: BookStatus;
   rating?: number;
   notes?: string;
 }
 
-export type UpdateBookInput = Partial<CreateBookInput>;
+export type UpdateBookInput = Omit<Partial<CreateBookInput>, "rating"> & {
+  rating?: number | null;
+};

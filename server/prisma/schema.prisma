@@ -15,14 +15,15 @@ enum BookStatus {
 }
 
 model Book {
-  id        String     @id @default(cuid())
-  title     String
-  author    String
-  genre     String
-  coverUrl  String?
-  status    BookStatus @default(WANT_TO_READ)
-  rating    Int?
-  notes     String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id          String     @id @default(cuid())
+  title       String
+  author      String
+  genre       String
+  description String?
+  coverUrl    String?
+  status      BookStatus @default(WANT_TO_READ)
+  rating      Int?
+  notes       String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }

@@ -4,6 +4,7 @@ type CreateBookInput = {
   title: string;
   author: string;
   genre: string;
+  description?: string;
   coverUrl?: string;
   status?: "WANT_TO_READ" | "CURRENTLY_READING" | "FINISHED";
   rating?: number;
@@ -32,7 +33,9 @@ export const createBook = (data: CreateBookInput) => {
 
 export const updateBook = (
   id: string,
-  data: Partial<CreateBookInput>,
+  data: Omit<Partial<CreateBookInput>, "rating"> & {
+    rating?: number | null;
+  },
 ) => {
   return prisma.book.update({
     where: { id },

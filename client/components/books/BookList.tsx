@@ -1,6 +1,8 @@
 import { Book } from "@/types/book";
 import { Star } from "lucide-react";
 import { JSX } from "react/jsx-runtime";
+import Image from "next/image";
+import Link from "next/link";
 
 interface BookListProps {
   filteredBooks: Book[];
@@ -8,7 +10,10 @@ interface BookListProps {
 }
 
 export const BookList = ({ filteredBooks, getStatusBadge }: BookListProps) => {
-  console.log("🚀 ~ BookList ~ filteredBooks:", filteredBooks);
+  const hasCoverImage = (coverUrl: string | null): coverUrl is string =>
+      !!coverUrl &&
+      (coverUrl.startsWith("http://") || coverUrl.startsWith("https://"));
+
   return (
     <>
       {filteredBooks.length === 0 ? (
@@ -18,15 +23,26 @@ export const BookList = ({ filteredBooks, getStatusBadge }: BookListProps) => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredBooks.map((book) => (
-            <div
+            <Link
               key={book.id}
-              className={`rounded-2xl p-4 border shadow-sm hover:shadow-md transition flex flex-col justify-between bg-white border-neutral-200/70`}
+              href={`/books/${book.id}`}
+              className="rounded-2xl p-4 border shadow-sm hover:shadow-md transition flex flex-col justify-between bg-white border-neutral-200/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500"
             >
               <div>
                 {/* Cover Card */}
                 <div
-                  className={`w-full aspect-[4/5] rounded-xl p-6 flex flex-col justify-between relative overflow-hidden shadow-inner ${book.coverUrl}`}
+                  className={`w-full aspect-[4/5] rounded-xl p-6 flex flex-col justify-between relative overflow-hidden shadow-inner ${hasCoverImage(book.coverUrl) ? "bg-neutral-100" : book.coverUrl ?? "bg-gradient-to-br from-amber-100 to-orange-200"}`}
                 >
+                  {hasCoverImage(book.coverUrl) && (
+                    <Image
+                      src={book.coverUrl}
+                      alt={`${book.title} cover`}
+                      fill
+                      unoptimized
+                      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 40vw, 25vw"
+                      className="object-cover"
+                    />
+                  )}
                   <div>
                     <span
                       className={`text-[10px] tracking-widest uppercase font-bold`}
@@ -63,11 +79,11 @@ export const BookList = ({ filteredBooks, getStatusBadge }: BookListProps) => {
                 <div className="flex items-center gap-1 text-xs font-semibold">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   <span className={"text-neutral-700"}>
-                    {book?.rating?.toFixed(1)}
+                    {book.rating?.toFixed(1) ?? "—"}
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

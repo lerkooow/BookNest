@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { Sidebar } from "@/components/ui/Sidebar/Sidebar";
 
@@ -15,7 +16,16 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body>
-        <Sidebar />
+        <Suspense
+          fallback={
+            <aside
+              aria-hidden="true"
+              className="fixed inset-y-0 left-0 hidden w-[260px] border-r border-neutral-200 bg-[#faf9f6] md:block"
+            />
+          }
+        >
+          <Sidebar />
+        </Suspense>
         <main className="min-h-screen md:ml-[260px]">{children}</main>
       </body>
     </html>
