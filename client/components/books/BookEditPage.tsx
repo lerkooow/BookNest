@@ -5,7 +5,7 @@ import { Book, BookStatus } from "@/types/book";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowLeft, ImageIcon, Star, Upload } from "lucide-react";
+import { ArrowLeft, Star, Upload } from "lucide-react";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 
 const inputClass =
@@ -24,7 +24,12 @@ const genres = [
   "Other",
 ];
 const maxCoverSize = 2 * 1024 * 1024;
-const allowedCoverTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const allowedCoverTypes = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+];
 
 export const BookEditPage = ({ bookId }: { bookId: string }) => {
   const router = useRouter();
@@ -260,7 +265,13 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
           <section className="space-y-3">
             <h2 className="text-sm font-medium text-neutral-700">Cover</h2>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-              <div className="relative aspect-[4/5] w-36 shrink-0 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+              <div
+                className={`relative aspect-[4/5] w-36 shrink-0 overflow-hidden rounded-xl border border-black/5 shadow-inner ${
+                  hasCoverImage
+                    ? "bg-neutral-100"
+                    : coverUrl || "bg-gradient-to-br from-amber-100 to-orange-200"
+                }`}
+              >
                 {hasCoverImage ? (
                   <Image
                     src={coverUrl}
@@ -271,9 +282,14 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
                     className="object-cover"
                   />
                 ) : (
-                  <div className="flex h-full flex-col items-center justify-center gap-2 p-3 text-center text-xs text-neutral-400">
-                    <ImageIcon size={24} />
-                    No cover
+                  <div className="flex h-full flex-col justify-between p-4">
+                    <span className="text-[10px] font-bold uppercase tracking-widest">
+                      {genre}
+                    </span>
+                    <span className="font-serif text-lg font-bold leading-tight">
+                      {title}
+                    </span>
+                    <span className="text-xs opacity-80">{author}</span>
                   </div>
                 )}
               </div>
