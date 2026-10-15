@@ -1,9 +1,11 @@
 "use client";
 
+import { Book } from "@/types/book";
 import { BookFilters } from "./BookFilters";
 import { BookHeader } from "./BookHeader";
 import { BookList } from "./BookList";
 import { useLibrary } from "./hooks/useLibrary";
+import { LibrarySkeleton } from "./LibrarySkeleton";
 
 export const LibraryPage = () => {
   const {
@@ -16,8 +18,40 @@ export const LibraryPage = () => {
     sortBy,
     setSortBy,
     filteredBooks,
-    getStatusBadge,
+    loading,
+    error,
   } = useLibrary();
+
+  const getStatusBadge = (status: Book["status"]) => {
+    switch (status) {
+      case "FINISHED":
+        return (
+          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600">
+            Finished
+          </span>
+        );
+      case "CURRENTLY_READING":
+        return (
+          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-sky-50 text-sky-600">
+            Currently Reading
+          </span>
+        );
+      case "WANT_TO_READ":
+        return (
+          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-500">
+            Want to Read
+          </span>
+        );
+    }
+  };
+
+  if (loading) {
+    return <LibrarySkeleton />;
+  }
+
+  if (error) {
+    return <p className="p-8">Error: {error}</p>;
+  }
 
   return (
     <div

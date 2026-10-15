@@ -1,4 +1,4 @@
-import type { Book } from "@/app/mockData";
+import { Book } from "@/types/book";
 import { Star } from "lucide-react";
 import { JSX } from "react/jsx-runtime";
 
@@ -8,6 +8,7 @@ interface BookListProps {
 }
 
 export const BookList = ({ filteredBooks, getStatusBadge }: BookListProps) => {
+  console.log("🚀 ~ BookList ~ filteredBooks:", filteredBooks);
   return (
     <>
       {filteredBooks.length === 0 ? (
@@ -24,11 +25,11 @@ export const BookList = ({ filteredBooks, getStatusBadge }: BookListProps) => {
               <div>
                 {/* Cover Card */}
                 <div
-                  className={`w-full aspect-[4/5] rounded-xl p-6 flex flex-col justify-between relative overflow-hidden shadow-inner ${book.coverBg}`}
+                  className={`w-full aspect-[4/5] rounded-xl p-6 flex flex-col justify-between relative overflow-hidden shadow-inner ${book.coverUrl}`}
                 >
                   <div>
                     <span
-                      className={`text-[10px] tracking-widest uppercase font-bold ${book.coverTextColor}`}
+                      className={`text-[10px] tracking-widest uppercase font-bold`}
                     >
                       {book.genre}
                     </span>
@@ -62,7 +63,7 @@ export const BookList = ({ filteredBooks, getStatusBadge }: BookListProps) => {
                 <div className="flex items-center gap-1 text-xs font-semibold">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   <span className={"text-neutral-700"}>
-                    {book.rating.toFixed(1)}
+                    {book?.rating?.toFixed(1)}
                   </span>
                 </div>
               </div>
