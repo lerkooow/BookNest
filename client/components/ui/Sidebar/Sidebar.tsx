@@ -83,8 +83,6 @@ export const Sidebar = () => {
         >
           <section className="space-y-1">{renderLinks(mainLinks)}</section>
         </nav>
-
-        <SidebarFooter collapsed={collapsed} isActive={isActive} />
       </aside>
     </>
   );

@@ -1,12 +1,13 @@
 import { ChevronDown } from "lucide-react";
 
-import { statusTabs } from "./hooks/useLibrary";
+import { ALL_GENRES, statusTabs } from "./hooks/useLibrary";
 
 interface BookFiltersProps {
   selectedStatus: string;
   setSelectedStatus: (status: string) => void;
   selectedGenre: string;
   setSelectedGenre: (genre: string) => void;
+  genres: string[];
   sortBy: string;
   setSortBy: (sort: string) => void;
 }
@@ -16,6 +17,7 @@ export const BookFilters = ({
   setSelectedStatus,
   selectedGenre,
   setSelectedGenre,
+  genres,
   sortBy,
   setSortBy,
 }: BookFiltersProps) => {
@@ -51,11 +53,12 @@ export const BookFilters = ({
             onChange={(e) => setSelectedGenre(e.target.value)}
             className="cursor-pointer appearance-none rounded-full border border-neutral-200 bg-white py-1.5 pl-4 pr-8 text-sm text-neutral-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-neutral-400"
           >
-            <option value="all">All Genres</option>
-            <option value="fiction">Fiction</option>
-            <option value="non-fiction">Non-Fiction</option>
-            <option value="sci-fi">Sci-Fi</option>
-            <option value="self-help">Self-Help</option>
+            <option value={ALL_GENRES}>All Genres</option>
+            {genres.map((genre) => (
+              <option key={genre} value={genre}>
+                {genre}
+              </option>
+            ))}
           </select>
 
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-400">

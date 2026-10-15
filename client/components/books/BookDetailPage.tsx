@@ -22,7 +22,9 @@ const statusStyles: Record<Book["status"], string> = {
 
 const hasCoverImage = (coverUrl: string | null): coverUrl is string =>
   !!coverUrl &&
-  (coverUrl.startsWith("http://") || coverUrl.startsWith("https://"));
+  (coverUrl.startsWith("data:image/") ||
+    coverUrl.startsWith("http://") ||
+    coverUrl.startsWith("https://"));
 
 export const BookDetailPage = ({ bookId }: { bookId: string }) => {
   const router = useRouter();

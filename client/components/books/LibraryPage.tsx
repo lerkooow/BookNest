@@ -15,6 +15,7 @@ export const LibraryPage = () => {
     setSelectedStatus,
     selectedGenre,
     setSelectedGenre,
+    genres,
     sortBy,
     setSortBy,
     filteredBooks,
@@ -66,6 +67,7 @@ export const LibraryPage = () => {
         setSelectedStatus={setSelectedStatus}
         selectedGenre={selectedGenre}
         setSelectedGenre={setSelectedGenre}
+        genres={genres}
         sortBy={sortBy}
         setSortBy={setSortBy}
       />

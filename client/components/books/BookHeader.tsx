@@ -15,10 +15,10 @@ export const BookHeader = ({
         <h1
           className={`text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900`}
         >
-          My Reading Library
+          Library
         </h1>
         <p className={`text-sm mt-0.5 text-neutral-500"`}>
-          Your books, your stories, your space.
+          Your books, your stories, your space
         </p>
       </div>
 

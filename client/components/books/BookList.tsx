@@ -11,14 +11,16 @@ interface BookListProps {
 
 export const BookList = ({ filteredBooks, getStatusBadge }: BookListProps) => {
   const hasCoverImage = (coverUrl: string | null): coverUrl is string =>
-      !!coverUrl &&
-      (coverUrl.startsWith("http://") || coverUrl.startsWith("https://"));
+    !!coverUrl &&
+    (coverUrl.startsWith("data:image/") ||
+      coverUrl.startsWith("http://") ||
+      coverUrl.startsWith("https://"));
 
   return (
     <>
       {filteredBooks.length === 0 ? (
         <div className="text-center py-16 text-neutral-500">
-          <p className="text-lg">No books found matching your criteria.</p>
+          <p className="text-lg">No books found matching your criteria</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -31,7 +33,7 @@ export const BookList = ({ filteredBooks, getStatusBadge }: BookListProps) => {
               <div>
                 {/* Cover Card */}
                 <div
-                  className={`w-full aspect-[4/5] rounded-xl p-6 flex flex-col justify-between relative overflow-hidden shadow-inner ${hasCoverImage(book.coverUrl) ? "bg-neutral-100" : book.coverUrl ?? "bg-gradient-to-br from-amber-100 to-orange-200"}`}
+                  className={`w-full aspect-[4/5] rounded-xl p-6 flex flex-col justify-between relative overflow-hidden shadow-inner ${hasCoverImage(book.coverUrl) ? "bg-neutral-100" : (book.coverUrl ?? "bg-gradient-to-br from-amber-100 to-orange-200")}`}
                 >
                   {hasCoverImage(book.coverUrl) && (
                     <Image

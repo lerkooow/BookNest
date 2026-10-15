@@ -1,53 +1,60 @@
 "use client";
 
-import React, { useState } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { ImageIcon, ChevronDown, Star, Upload, ArrowLeft } from "lucide-react";
+import { ImageIcon, ChevronDown, Star } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { booksApi } from "@/lib/api";
+import { BookStatus, CreateBookInput } from "@/types/book";
 
 export default function AddBookPage() {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [genre, setGenre] = useState("");
-  const [status, setStatus] = useState("Want to Read");
+  const [status, setStatus] = useState<BookStatus>("WANT_TO_READ");
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
+  const [description, setDescription] = useState("");
   const [notes, setNotes] = useState("");
   const [coverUrl, setCoverUrl] = useState("");
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  // Обработка загрузки файла
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setPreviewImage(url);
+  const handleStatusChange = (value: string) => {
+    if (
+      value === "WANT_TO_READ" ||
+      value === "CURRENTLY_READING" ||
+      value === "FINISHED"
+    ) {
+      setStatus(value);
     }
   };
 
-  // Обработка ссылки на URL
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setCoverUrl(value);
-    if (value.trim()) {
-      setPreviewImage(value);
-    } else {
-      setPreviewImage(null);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newBook = {
-      title,
-      author,
+    setSaving(true);
+    setError("");
+
+    const newBook: CreateBookInput = {
+      title: title.trim(),
+      author: author.trim(),
       genre,
       status,
-      rating,
-      notes,
-      cover: previewImage || coverUrl,
+      description: description.trim(),
+      notes: notes.trim(),
+      ...(rating > 0 ? { rating } : {}),
+      ...(coverUrl.trim() ? { coverUrl: coverUrl.trim() } : {}),
     };
-    console.log("Book submitted:", newBook);
-    // Добавьте логику сохранения (API / state management)
+
+    try {
+      const createdBook = await booksApi.create(newBook);
+      router.push(`/books/${createdBook.id}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to add book");
+      setSaving(false);
+    }
   };
 
   return (
@@ -67,14 +74,17 @@ export default function AddBookPage() {
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-            {/* Левая колонка: Загрузка обложки */}
+            {/* Cover */}
             <div className="md:col-span-5 flex flex-col items-center">
               <div className="w-full border border-slate-200/80 rounded-2xl p-4 bg-white shadow-[0_2px_10px_-4px_rgba(0,0,0,0.03)]">
                 <div className="relative aspect-[5/4] w-full rounded-xl bg-[#F8FAFC] border border-dashed border-slate-200 flex flex-col items-center justify-center p-6 text-center overflow-hidden group">
-                  {previewImage ? (
-                    <img
-                      src={previewImage}
-                      alt="Cover preview"
+                  {coverUrl ? (
+                    <Image
+                      src={coverUrl}
+                      alt="Book cover preview"
+                      fill
+                      unoptimized
+                      sizes="(max-width: 768px) 90vw, 40vw"
                       className="absolute inset-0 w-full h-full object-cover rounded-xl"
                     />
                   ) : (
@@ -83,43 +93,24 @@ export default function AddBookPage() {
                         <ImageIcon className="w-6 h-6 stroke-[1.5]" />
                       </div>
                       <p className="text-xs text-slate-400 max-w-[160px] leading-relaxed mb-4">
-                        Upload cover image or enter URL
+                        Add a cover image URL below
                       </p>
-                      <label className="cursor-pointer inline-flex items-center justify-center px-4 py-2 bg-[#EAEFE9] hover:bg-[#E0E8DF] text-slate-700 text-xs font-medium rounded-full transition-colors">
-                        Choose file
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={handleFileUpload}
-                        />
-                      </label>
                     </>
                   )}
                 </div>
 
-                {/* Разделитель "or" */}
-                <div className="relative my-4 text-center">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-slate-100"></div>
-                  </div>
-                  <span className="relative bg-white px-3 text-[11px] text-slate-400">
-                    or
-                  </span>
-                </div>
-
-                {/* Поле ввода URL обложки */}
                 <input
-                  type="text"
+                  type="url"
                   placeholder="https://example.com/cover.jpg"
                   value={coverUrl}
-                  onChange={handleUrlChange}
+                  onChange={(e) => setCoverUrl(e.target.value)}
+                  aria-label="Cover image URL"
                   className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] transition-all"
                 />
               </div>
             </div>
 
-            {/* Правая колонка: Пола формы */}
+            {/* Book details */}
             <div className="md:col-span-7 flex flex-col gap-5">
               {/* Title */}
               <div className="flex flex-col gap-1.5">
@@ -158,6 +149,7 @@ export default function AddBookPage() {
                 </label>
                 <div className="relative">
                   <select
+                    required
                     value={genre}
                     onChange={(e) => setGenre(e.target.value)}
                     className="w-full appearance-none px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] transition-all pr-10 cursor-pointer"
@@ -165,12 +157,30 @@ export default function AddBookPage() {
                     <option value="" disabled hidden>
                       Select genre
                     </option>
-                    <option value="Fiction">Fiction</option>
-                    <option value="Non-Fiction">Non-Fiction</option>
-                    <option value="Sci-Fi">Sci-Fi</option>
-                    <option value="Fantasy">Fantasy</option>
-                    <option value="Psychology">Psychology</option>
-                    <option value="Business">Business</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Mystery, Thriller, & Crime">
+                      Mystery, Thriller, & Crime
+                    </option>
+                    <option value="Fantasy & Science Fiction">
+                      Fantasy & Science Fiction
+                    </option>
+                    <option value="Non-Fiction & Self-Help">
+                      Non-Fiction & Self-Help
+                    </option>
+                    <option value="Historical Fiction">
+                      Historical Fiction
+                    </option>
+                    <option value="Young Adult">Young Adult</option>
+                    <option value="Biography, Autobiography, & Memoir">
+                      Biography, Autobiography, & Memoir
+                    </option>
+                    <option value="Children’s Literature">
+                      Children’s Literature
+                    </option>
+                    <option value="Religion & Spirituality">
+                      Religion & Spirituality
+                    </option>
+                    <option value="Other">Other</option>
                   </select>
                   <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
@@ -184,14 +194,14 @@ export default function AddBookPage() {
                 <div className="relative">
                   <select
                     value={status}
-                    onChange={(e) => setStatus(e.target.value)}
+                    onChange={(e) => handleStatusChange(e.target.value)}
                     className="w-full appearance-none px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] transition-all pr-10 cursor-pointer font-medium"
                   >
-                    <option value="Want to Read">🟠 Want to Read</option>
-                    <option value="Currently Reading">
+                    <option value="WANT_TO_READ">🟠 Want to Read</option>
+                    <option value="CURRENTLY_READING">
                       🔵 Currently Reading
                     </option>
-                    <option value="Finished">🟢 Finished</option>
+                    <option value="FINISHED">🟢 Finished</option>
                   </select>
                   <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
@@ -225,6 +235,21 @@ export default function AddBookPage() {
                 </div>
               </div>
 
+              {/* Description */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-700">
+                  Description{" "}
+                  <span className="text-slate-400 font-normal">(optional)</span>
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="A short description of the book..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] transition-all resize-y"
+                />
+              </div>
+
               {/* Notes */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
@@ -242,6 +267,15 @@ export default function AddBookPage() {
             </div>
           </div>
 
+          {error && (
+            <p
+              role="alert"
+              className="mt-6 rounded-xl bg-rose-50 p-3 text-sm text-rose-700"
+            >
+              {error}
+            </p>
+          )}
+
           {/* Кнопки действий (Cancel / Save Book) */}
           <div className="flex items-center justify-end gap-3 mt-10 pt-4 border-t border-slate-50">
             <Link
@@ -252,9 +286,11 @@ export default function AddBookPage() {
             </Link>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-[#2D6A4F] hover:bg-[#23533E] text-white font-medium text-xs transition-colors shadow-sm"
+              disabled={saving}
+              aria-busy={saving}
+              className="px-6 py-2.5 rounded-xl bg-[#2D6A4F] hover:bg-[#23533E] text-white font-medium text-xs transition-colors shadow-sm disabled:cursor-wait disabled:opacity-60"
             >
-              Save Book
+              {saving ? "Saving..." : "Save Book"}
             </button>
           </div>
         </form>

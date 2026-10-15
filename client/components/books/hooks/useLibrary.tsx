@@ -11,15 +11,24 @@ export const statusTabs = [
   { id: "WANT_TO_READ", label: "Want to Read" },
 ];
 
+export const ALL_GENRES = "ALL";
+
 export const useLibrary = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
-  const [selectedGenre, setSelectedGenre] = useState<string>("All Genres");
-  const [sortBy, setSortBy] = useState<string>("Newest");
+  const [selectedGenre, setSelectedGenre] = useState<string>(ALL_GENRES);
+  const [sortBy, setSortBy] = useState<string>("newest");
 
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const genres = useMemo(
+    () => Array.from(new Set(books.map((book) => book.genre))).sort((a, b) =>
+      a.localeCompare(b),
+    ),
+    [books],
+  );
 
   useEffect(() => {
     booksApi
@@ -39,17 +48,17 @@ export const useLibrary = () => {
         const matchesStatus =
           selectedStatus === "ALL" || book.status === selectedStatus;
         const matchesGenre =
-          selectedGenre === "All Genres" || book.genre === selectedGenre;
+          selectedGenre === ALL_GENRES || book.genre === selectedGenre;
         return matchesSearch && matchesStatus && matchesGenre;
       })
       .sort((a, b) => {
-        if (sortBy === "Newest") {
+        if (sortBy === "newest") {
           return (
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
-        } else if (sortBy === "Rating: High to Low") {
+        } else if (sortBy === "rating") {
           return (b.rating ?? 0) - (a.rating ?? 0);
-        } else if (sortBy === "Title: A to Z") {
+        } else if (sortBy === "title") {
           return a.title.localeCompare(b.title);
         }
         return 0;
@@ -63,6 +72,7 @@ export const useLibrary = () => {
     setSelectedStatus,
     selectedGenre,
     setSelectedGenre,
+    genres,
     sortBy,
     setSortBy,
     filteredBooks,

@@ -4,14 +4,31 @@ import { booksApi } from "@/lib/api";
 import { Book, BookStatus } from "@/types/book";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Star } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import Image from "next/image";
+import { ArrowLeft, ImageIcon, Star, Upload } from "lucide-react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 
 const inputClass =
   "w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-800 shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-emerald-800 focus:ring-2 focus:ring-emerald-800/10";
 
+const genres = [
+  "Romance",
+  "Mystery, Thriller, & Crime",
+  "Fantasy & Science Fiction",
+  "Non-Fiction & Self-Help",
+  "Historical Fiction",
+  "Young Adult",
+  "Biography, Autobiography, & Memoir",
+  "Children’s Literature",
+  "Religion & Spirituality",
+  "Other",
+];
+const maxCoverSize = 2 * 1024 * 1024;
+const allowedCoverTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+
 export const BookEditPage = ({ bookId }: { bookId: string }) => {
   const router = useRouter();
+  const coverFileInput = useRef<HTMLInputElement>(null);
   const [book, setBook] = useState<Book | null>(null);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -87,6 +104,40 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
       setStatus(value);
     }
   };
+
+  const handleCoverUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    if (!allowedCoverTypes.includes(file.type)) {
+      setError("Choose a JPEG, PNG, WebP, or GIF image.");
+      return;
+    }
+    if (file.size > maxCoverSize) {
+      setError("The cover image must be 2 MB or smaller.");
+      return;
+    }
+
+    setError("");
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setCoverUrl(reader.result);
+      } else {
+        setError("Could not read the selected image.");
+      }
+    };
+    reader.onerror = () => setError("Could not read the selected image.");
+    reader.readAsDataURL(file);
+  };
+
+  const hasCoverImage =
+    coverUrl.startsWith("data:image/") ||
+    coverUrl.startsWith("http://") ||
+    coverUrl.startsWith("https://");
+  const genreOptions =
+    genre && !genres.includes(genre) ? [genre, ...genres] : genres;
 
   if (loading) {
     return (
@@ -165,12 +216,21 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="space-y-2 text-sm font-medium text-neutral-700">
               Genre
-              <input
+              <select
                 required
                 value={genre}
                 onChange={(event) => setGenre(event.target.value)}
                 className={inputClass}
-              />
+              >
+                <option value="" disabled>
+                  Select genre
+                </option>
+                {genreOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
             </label>
             <label className="space-y-2 text-sm font-medium text-neutral-700">
               Status
@@ -197,16 +257,60 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
             />
           </label>
 
-          <label className="block space-y-2 text-sm font-medium text-neutral-700">
-            Cover image URL
-            <input
-              type="url"
-              value={coverUrl}
-              onChange={(event) => setCoverUrl(event.target.value)}
-              placeholder="https://example.com/cover.jpg"
-              className={inputClass}
-            />
-          </label>
+          <section className="space-y-3">
+            <h2 className="text-sm font-medium text-neutral-700">Cover</h2>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+              <div className="relative aspect-[4/5] w-36 shrink-0 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+                {hasCoverImage ? (
+                  <Image
+                    src={coverUrl}
+                    alt={`${title} cover preview`}
+                    fill
+                    unoptimized
+                    sizes="144px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-2 p-3 text-center text-xs text-neutral-400">
+                    <ImageIcon size={24} />
+                    No cover
+                  </div>
+                )}
+              </div>
+              <div className="min-w-0 flex-1 space-y-3">
+                <label className="block space-y-2 text-sm font-medium text-neutral-700">
+                  Cover image URL
+                  <input
+                    type="url"
+                    value={coverUrl.startsWith("data:image/") ? "" : coverUrl}
+                    onChange={(event) => setCoverUrl(event.target.value)}
+                    placeholder="https://example.com/cover.jpg"
+                    className={inputClass}
+                  />
+                </label>
+                <input
+                  ref={coverFileInput}
+                  type="file"
+                  accept={allowedCoverTypes.join(",")}
+                  onChange={handleCoverUpload}
+                  className="sr-only"
+                  tabIndex={-1}
+                  aria-label="Choose a cover image file"
+                />
+                <button
+                  type="button"
+                  onClick={() => coverFileInput.current?.click()}
+                  className="inline-flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
+                >
+                  <Upload size={16} />
+                  Upload from device
+                </button>
+                <p className="text-xs text-neutral-500">
+                  JPEG, PNG, WebP, or GIF. Maximum file size: 2 MB.
+                </p>
+              </div>
+            </div>
+          </section>
 
           <fieldset className="space-y-2">
             <legend className="text-sm font-medium text-neutral-700">
