@@ -5,9 +5,12 @@ import type {
   UpdateBookInput,
 } from "../types/book";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ??
-  "http://localhost:5000/api";
+const configuredApiUrl =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api";
+const normalizedApiUrl = configuredApiUrl.replace(/\/+$/, "");
+const API_URL = /\/api$/i.test(normalizedApiUrl)
+  ? normalizedApiUrl
+  : `${normalizedApiUrl}/api`;
 
 async function request<T>(
   path: string,
