@@ -6,6 +6,7 @@ import { BookHeader } from "./BookHeader";
 import { BookList } from "./BookList";
 import { useLibrary } from "./hooks/useLibrary";
 import { LibrarySkeleton } from "./LibrarySkeleton";
+import { ErrorModal } from "@/components/ui/ErrorModal";
 
 export const LibraryPage = () => {
   const {
@@ -51,7 +52,17 @@ export const LibraryPage = () => {
   }
 
   if (error) {
-    return <p className="p-8">Error: {error}</p>;
+    return (
+      <div className="min-h-screen bg-[#FCFCF9] p-8 text-neutral-700">
+        <ErrorModal key={error} message={error} />
+        <p
+          role="alert"
+          className="rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
+        >
+          Failed to load your library: {error}
+        </p>
+      </div>
+    );
   }
 
   return (

@@ -1,11 +1,7 @@
 import { Suspense } from "react";
 import { BookEditPage } from "@/components/books/BookEditPage";
 
-export default function EditBookPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default function page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <Suspense
       fallback={

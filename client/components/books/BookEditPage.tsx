@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ArrowLeft, Star, Upload } from "lucide-react";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { ErrorModal } from "@/components/ui/ErrorModal";
 
 const inputClass =
   "w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-800 shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-emerald-800 focus:ring-2 focus:ring-emerald-800/10";
@@ -159,6 +160,7 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
   if (!book) {
     return (
       <div className="min-h-screen bg-[#FCFCF9] p-6 md:p-10">
+        <ErrorModal key={error} message={error} />
         <p
           role="alert"
           className="mx-auto rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
@@ -366,15 +368,6 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
             />
           </label>
 
-          {error && (
-            <p
-              role="alert"
-              className="rounded-xl bg-rose-50 p-3 text-sm text-rose-700"
-            >
-              {error}
-            </p>
-          )}
-
           <div className="flex flex-wrap justify-end gap-3 border-t border-neutral-100 pt-5">
             <Link
               href={`/books/${book.id}`}
@@ -392,6 +385,7 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
           </div>
         </form>
       </div>
+      <ErrorModal key={error} message={error} />
     </div>
   );
 };

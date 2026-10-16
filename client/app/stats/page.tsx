@@ -3,6 +3,7 @@
 import { booksApi } from "@/lib/api";
 import { Book, BookStatus } from "@/types/book";
 import { useEffect, useMemo, useState } from "react";
+import { ErrorModal } from "@/components/ui/ErrorModal";
 
 const statusSegments: {
   status: BookStatus;
@@ -107,6 +108,7 @@ export default function ReadingLibraryPage() {
       </header>
 
       <main className="mx-auto space-y-6 px-4 py-4 sm:px-6">
+        <ErrorModal key={error} message={error} />
         {loading ? (
           <div
             className="grid animate-pulse grid-cols-2 gap-4 sm:grid-cols-4"

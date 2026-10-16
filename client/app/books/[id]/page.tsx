@@ -1,11 +1,7 @@
 import { Suspense } from "react";
 import { BookDetailPage } from "@/components/books/BookDetailPage";
 
-export default function BookPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default function page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <Suspense
       fallback={

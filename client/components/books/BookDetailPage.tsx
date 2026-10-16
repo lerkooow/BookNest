@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, BookOpen, CalendarDays, Edit3, Star, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ErrorModal } from "@/components/ui/ErrorModal";
 
 const statusLabels: Record<Book["status"], string> = {
   FINISHED: "Finished",
@@ -90,6 +91,7 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
   if (error && !book) {
     return (
       <div className="min-h-screen bg-[#FCFCF9] p-6 md:p-10">
+        <ErrorModal key={error} message={error} />
         <div className="mx-auto max-w-5xl">
           <Link href="/" className="inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900">
             <ArrowLeft size={16} /> Back to Library
@@ -126,10 +128,6 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
             </button>
           </div>
         </div>
-
-        {error && (
-          <p role="alert" className="mb-6 rounded-xl bg-rose-50 p-4 text-sm text-rose-700">{error}</p>
-        )}
 
         <div className="grid items-start gap-8 md:grid-cols-[260px_minmax(0,1fr)] md:gap-12">
           <div className="mx-auto w-full max-w-[260px]">
@@ -197,6 +195,7 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
           </div>
         </div>
       </div>
+      <ErrorModal key={error} message={error} />
     </div>
   );
 };
