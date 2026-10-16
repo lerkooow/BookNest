@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ErrorModal } from "@/components/ui/ErrorModal";
+import { ConfirmModal } from "@/components/ui/ConfirmModal";
 
 const statusLabels: Record<Book["status"], string> = {
   FINISHED: "Finished",
@@ -40,6 +41,7 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -62,10 +64,8 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
   }, [bookId]);
 
   const handleDelete = async () => {
-    if (!book || !window.confirm(`Delete "${book.title}" from your library?`)) {
-      return;
-    }
-
+    if (!book) return;
+    setIsDeleteModalOpen(false);
     setDeleting(true);
     setError("");
     try {
@@ -138,7 +138,7 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
             </Link>
             <button
               type="button"
-              onClick={handleDelete}
+              onClick={() => setIsDeleteModalOpen(true)}
               disabled={deleting}
               className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-white px-4 py-2 text-sm font-medium text-rose-700 shadow-sm transition hover:bg-rose-50 disabled:cursor-wait disabled:opacity-60"
             >
@@ -237,6 +237,16 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
           </div>
         </div>
       </div>
+      {isDeleteModalOpen && (
+        <ConfirmModal
+          title="Delete this book?"
+          message={`"${book.title}" will be permanently removed from your library.`}
+          confirmLabel="Delete book"
+          isBusy={deleting}
+          onCancel={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleDelete}
+        />
+      )}
       <ErrorModal key={error} message={error} />
     </div>
   );
