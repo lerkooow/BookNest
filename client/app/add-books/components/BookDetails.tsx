@@ -16,7 +16,6 @@ export const BookDetails = ({
 }) => {
   return (
     <>
-      {/* Title */}
       <div className="flex flex-col gap-1.5">
         <label className="text-xs font-semibold text-slate-700">
           Title <span className="text-red-500">*</span>
@@ -31,7 +30,6 @@ export const BookDetails = ({
         />
       </div>
 
-      {/* Author */}
       <div className="flex flex-col gap-1.5">
         <label className="text-xs font-semibold text-slate-700">
           Author <span className="text-red-500">*</span>

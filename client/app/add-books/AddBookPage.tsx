@@ -34,6 +34,7 @@ export const AddBookPage = () => {
     setCoverUrl,
     saving,
     error,
+    setError,
     handleSubmit,
   } = useAddBooks();
   return (
@@ -52,7 +53,11 @@ export const AddBookPage = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-            <AddCover coverUrl={coverUrl} setCoverUrl={setCoverUrl} />
+            <AddCover
+              coverUrl={coverUrl}
+              setCoverUrl={setCoverUrl}
+              onError={setError}
+            />
             <div className="md:col-span-7 flex flex-col gap-5">
               <BookDetails
                 title={title}

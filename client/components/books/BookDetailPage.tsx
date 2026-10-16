@@ -5,7 +5,14 @@ import { Book } from "@/types/book";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, BookOpen, CalendarDays, Edit3, Star, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpen,
+  CalendarDays,
+  Edit3,
+  Star,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { ErrorModal } from "@/components/ui/ErrorModal";
 
@@ -73,7 +80,7 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
   if (loading) {
     return (
       <div className="min-h-screen animate-pulse bg-[#FCFCF9] p-6 md:p-10">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto">
           <div className="h-5 w-28 rounded bg-neutral-200" />
           <div className="mt-8 grid gap-10 md:grid-cols-[280px_1fr]">
             <div className="aspect-[4/5] rounded-2xl bg-neutral-200" />
@@ -92,11 +99,19 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
     return (
       <div className="min-h-screen bg-[#FCFCF9] p-6 md:p-10">
         <ErrorModal key={error} message={error} />
-        <div className="mx-auto max-w-5xl">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900">
+        <div className="mx-auto">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900"
+          >
             <ArrowLeft size={16} /> Back to Library
           </Link>
-          <p role="alert" className="mt-8 rounded-xl bg-rose-50 p-4 text-sm text-rose-700">{error}</p>
+          <p
+            role="alert"
+            className="mt-8 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
+          >
+            {error}
+          </p>
         </div>
       </div>
     );
@@ -106,9 +121,12 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
 
   return (
     <div className="min-h-screen bg-[#FCFCF9] px-4 py-6 text-neutral-800 sm:px-6 md:px-10 md:py-10">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium text-neutral-600 transition hover:text-neutral-900">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-medium text-neutral-600 transition hover:text-neutral-900"
+          >
             <ArrowLeft size={16} /> Back to Library
           </Link>
           <div className="flex items-center gap-2">
@@ -131,7 +149,9 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
 
         <div className="grid items-start gap-8 md:grid-cols-[260px_minmax(0,1fr)] md:gap-12">
           <div className="mx-auto w-full max-w-[260px]">
-            <div className={`relative aspect-[4/5] overflow-hidden rounded-2xl border border-black/5 shadow-lg ${hasCoverImage(book.coverUrl) ? "bg-neutral-100" : book.coverUrl ?? "bg-gradient-to-br from-amber-100 to-orange-200"}`}>
+            <div
+              className={`relative aspect-[4/5] overflow-hidden rounded-2xl border border-black/5 shadow-lg ${hasCoverImage(book.coverUrl) ? "bg-neutral-100" : (book.coverUrl ?? "bg-gradient-to-br from-amber-100 to-orange-200")}`}
+            >
               {hasCoverImage(book.coverUrl) ? (
                 <Image
                   src={book.coverUrl}
@@ -143,8 +163,12 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
                 />
               ) : (
                 <div className="flex h-full flex-col justify-between p-6">
-                  <span className="text-xs font-bold uppercase tracking-[0.2em]">{book.genre}</span>
-                  <span className="font-serif text-2xl font-bold leading-tight">{book.title}</span>
+                  <span className="text-xs font-bold uppercase tracking-[0.2em]">
+                    {book.genre}
+                  </span>
+                  <span className="font-serif text-2xl font-bold leading-tight">
+                    {book.title}
+                  </span>
                   <span className="text-sm">{book.author}</span>
                 </div>
               )}
@@ -152,10 +176,14 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
           </div>
 
           <div className="min-w-0">
-            <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">{book.title}</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+              {book.title}
+            </h1>
             <p className="mt-2 text-lg text-neutral-500">{book.author}</p>
 
-            <span className={`mt-5 inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ${statusStyles[book.status]}`}>
+            <span
+              className={`mt-5 inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ${statusStyles[book.status]}`}
+            >
               {statusLabels[book.status]}
             </span>
 
@@ -170,26 +198,40 @@ export const BookDetailPage = ({ bookId }: { bookId: string }) => {
               </div>
               <div className="flex items-center gap-2 text-sm text-neutral-600">
                 <CalendarDays size={17} className="text-neutral-400" />
-                <span>Added {new Date(book.createdAt).toLocaleDateString()}</span>
+                <span>
+                  Added {new Date(book.createdAt).toLocaleDateString()}
+                </span>
               </div>
             </div>
 
             <section className="mt-7">
-              <h2 className="text-lg font-semibold text-neutral-900">About this book</h2>
+              <h2 className="text-lg font-semibold text-neutral-900">
+                About this book
+              </h2>
               <p className="mt-2 text-sm leading-6 text-neutral-600">
-                {book.description?.trim() || "No description has been added yet."}
+                {book.description?.trim() ||
+                  "No description has been added yet."}
               </p>
             </section>
 
             <section className="mt-7">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-lg font-semibold text-neutral-900">Notes</h2>
-                <Link href={`/books/${book.id}/edit`} className="text-sm font-medium text-emerald-800 hover:underline">
+                <h2 className="text-lg font-semibold text-neutral-900">
+                  Notes
+                </h2>
+                <Link
+                  href={`/books/${book.id}/edit`}
+                  className="text-sm font-medium text-emerald-800 hover:underline"
+                >
                   Edit notes
                 </Link>
               </div>
               <div className="mt-3 min-h-24 whitespace-pre-wrap rounded-xl border border-neutral-200 bg-white p-4 text-sm leading-6 text-neutral-600">
-                {book.notes?.trim() || <span className="text-neutral-400">Add your thoughts about this book...</span>}
+                {book.notes?.trim() || (
+                  <span className="text-neutral-400">
+                    Add your thoughts about this book...
+                  </span>
+                )}
               </div>
             </section>
           </div>

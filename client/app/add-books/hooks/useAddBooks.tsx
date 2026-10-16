@@ -61,6 +61,16 @@ export const useAddBooks = () => {
     try {
       const createdBook = await booksApi.create(newBook);
       router.push(`/books/${createdBook.id}`);
+      setSaving(false);
+      setTitle("");
+      setAuthor("");
+      setGenre("");
+      setStatus("WANT_TO_READ");
+      setRating(0);
+      setHoverRating(0);
+      setDescription("");
+      setNotes("");
+      setCoverUrl("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to add book");
       setSaving(false);
@@ -88,6 +98,7 @@ export const useAddBooks = () => {
     setCoverUrl,
     saving,
     error,
+    setError,
     handleSubmit,
   };
 };
