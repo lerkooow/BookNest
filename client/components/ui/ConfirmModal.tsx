@@ -40,7 +40,7 @@ export const ConfirmModal = ({
         aria-describedby="confirm-modal-message"
         aria-labelledby="confirm-modal-title"
         aria-modal="true"
-        className="w-full max-w-md rounded-2xl border border-rose-100 bg-white p-6 shadow-2xl"
+        className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-rose-100 bg-white p-5 shadow-2xl sm:p-6"
         role="alertdialog"
       >
         <div className="flex items-start gap-4">
@@ -71,9 +71,9 @@ export const ConfirmModal = ({
             <X aria-hidden="true" size={18} />
           </button>
         </div>
-        <div className="mt-6 flex justify-end gap-3">
+        <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
           <button
-            className="rounded-xl border border-neutral-200 px-5 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl border border-neutral-200 px-5 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             disabled={isBusy}
             onClick={onCancel}
             type="button"
@@ -82,7 +82,7 @@ export const ConfirmModal = ({
           </button>
           <button
             autoFocus
-            className="rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/30 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+            className="w-full rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/30 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-60 sm:w-auto"
             disabled={isBusy}
             onClick={onConfirm}
             type="button"

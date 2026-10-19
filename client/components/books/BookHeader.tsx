@@ -10,20 +10,20 @@ export const BookHeader = ({
   setSearchQuery,
 }: BookHeaderProps) => {
   return (
-    <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <header className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-4 px-4 pb-4 pt-6 sm:flex-row sm:items-center sm:px-6 lg:px-8">
       <div>
         <h1
           className={`text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900`}
         >
           Library
         </h1>
-        <p className={`text-sm mt-0.5 text-neutral-500"`}>
+        <p className="mt-0.5 text-sm text-neutral-500">
           Your books, your stories, your space
         </p>
       </div>
 
       {/* Search Bar */}
-      <div className="relative sm:w-72">
+      <div className="relative w-full sm:w-72">
         <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
           <Search className="w-4 h-4" />
         </span>
@@ -32,7 +32,7 @@ export const BookHeader = ({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by title or author..."
-          className={`sm:w-72 pl-10 pr-4 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400 shadow-sm transition ${"bg-white border-neutral-200 text-neutral-900"}`}
+          className="w-full rounded-full border border-neutral-200 bg-white py-2 pl-10 pr-4 text-sm text-neutral-900 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-neutral-400"
         />
       </div>
     </header>

@@ -23,7 +23,7 @@ export const Sidebar = () => {
           title={collapsed ? label : undefined}
           aria-current={active ? "page" : undefined}
           className={`relative flex min-h-11 items-center gap-3 rounded-xl px-3 text-[13px] font-medium transition-colors ${
-            collapsed ? "justify-center px-0" : ""
+            collapsed ? "md:justify-center md:px-0" : ""
           } ${
             active
               ? "bg-[var(--secondary)] text-[var(--text)]"
@@ -36,7 +36,7 @@ export const Sidebar = () => {
 
           <Icon size={20} className="shrink-0" />
 
-          {!collapsed && <span>{label}</span>}
+          <span className={collapsed ? "md:hidden" : undefined}>{label}</span>
         </Link>
       );
     });
@@ -66,7 +66,7 @@ export const Sidebar = () => {
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex h-dvh flex-col border-r bg-[#faf9f6] border-neutral-200
            px-3 py-5 will-change-transform transition-[width,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-             collapsed ? "w-[76px]" : "w-[260px]"
+             collapsed ? "w-[min(260px,100vw)] md:w-[76px]" : "w-[260px]"
            } ${
              mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
            }`}

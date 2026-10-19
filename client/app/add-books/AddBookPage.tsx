@@ -41,7 +41,7 @@ export const AddBookPage = () => {
     <div
       className={`min-h-screen bg-[#FCFCF9] text-neutral-800 transition-colors duration-200`}
     >
-      <div className="w-full p-8 ">
+      <div className="w-full p-4 sm:p-6 lg:p-8">
         <div className="mb-8">
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">
             Add a New Book

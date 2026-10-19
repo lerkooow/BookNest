@@ -18,24 +18,26 @@ export const SidebarHeader = ({
   return (
     <div
       className={`mb-8 flex min-h-10 items-center ${
-        collapsed ? "flex-col gap-3" : "gap-3"
+        collapsed ? "gap-3 md:flex-col md:gap-3" : "gap-3"
       }`}
     >
       <Link
         href="/"
         className={`flex min-w-0 items-center gap-3 ${
-          collapsed ? "justify-center" : "flex-1"
+          collapsed ? "flex-1 md:flex-none md:justify-center" : "flex-1"
         }`}
       >
         <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[var(--primary)] text-white">
           <BookOpen size={23} />
         </span>
 
-        {!collapsed && (
-          <span className="text-xl font-bold tracking-tight text-neutral-900">
-            BookNest
-          </span>
-        )}
+        <span
+          className={`text-xl font-bold tracking-tight text-neutral-900 ${
+            collapsed ? "md:hidden" : ""
+          }`}
+        >
+          BookNest
+        </span>
       </Link>
 
       <button

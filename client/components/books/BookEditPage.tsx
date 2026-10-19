@@ -368,10 +368,10 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
             />
           </label>
 
-          <div className="flex flex-wrap justify-end gap-3 border-t border-neutral-100 pt-5">
+          <div className="flex flex-col-reverse justify-end gap-3 border-t border-neutral-100 pt-5 sm:flex-row">
             <Link
               href={`/books/${book.id}`}
-              className="rounded-xl border border-neutral-200 px-5 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
+              className="rounded-xl border border-neutral-200 px-5 py-2.5 text-center text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
             >
               Cancel
             </Link>

@@ -29,7 +29,7 @@ export const ErrorModal = ({ message }: ErrorModalProps) => {
         aria-labelledby="error-modal-title"
         aria-describedby="error-modal-message"
         aria-modal="true"
-        className="w-full max-w-md rounded-2xl border border-rose-100 bg-white p-6 shadow-2xl"
+        className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-rose-100 bg-white p-5 shadow-2xl sm:p-6"
         role="alertdialog"
       >
         <div className="flex items-start gap-4">

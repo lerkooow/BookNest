@@ -26,7 +26,9 @@ export default function RootLayout({
         >
           <Sidebar />
         </Suspense>
-        <main className="min-h-screen md:ml-[260px]">{children}</main>
+        <main className="min-h-screen pt-16 transition-[margin-left] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:ml-[var(--sidebar-width)] md:pt-0">
+          {children}
+        </main>
       </body>
     </html>
   );

@@ -22,7 +22,7 @@ export const BookFilters = ({
   setSortBy,
 }: BookFiltersProps) => {
   return (
-    <div className="mx-auto flex max-w-7xl flex-col items-stretch justify-between gap-4 border-b border-neutral-200/60 px-4 py-3 pb-6 sm:px-6 md:flex-row md:items-center lg:px-8">
+    <div className="mx-auto flex max-w-7xl flex-col items-stretch justify-between gap-4 border-b border-neutral-200/60 px-4 py-3 pb-6 sm:px-6 xl:flex-row xl:items-center lg:px-8">
       {/* Status Filters */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
         {statusTabs.map((tab) => {
@@ -46,12 +46,12 @@ export const BookFilters = ({
       </div>
 
       {/* Dropdowns */}
-      <div className="flex items-center gap-3">
-        <div className="relative">
+      <div className="grid w-full min-w-0 grid-cols-2 gap-3 md:flex md:w-auto md:items-center">
+        <div className="relative min-w-0 md:w-auto md:flex-none">
           <select
             value={selectedGenre}
             onChange={(e) => setSelectedGenre(e.target.value)}
-            className="cursor-pointer appearance-none rounded-full border border-neutral-200 bg-white py-1.5 pl-4 pr-8 text-sm text-neutral-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-neutral-400"
+            className="block w-full min-w-0 max-w-full cursor-pointer appearance-none rounded-full border border-neutral-200 bg-white py-1.5 pl-3 pr-7 text-sm text-neutral-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 md:w-auto md:max-w-[240px] md:pl-4 md:pr-8"
           >
             <option value={ALL_GENRES}>All Genres</option>
             {genres.map((genre) => (
@@ -66,11 +66,11 @@ export const BookFilters = ({
           </span>
         </div>
 
-        <div className="relative">
+        <div className="relative min-w-0 md:w-auto md:flex-none">
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="cursor-pointer appearance-none rounded-full border border-neutral-200 bg-white py-1.5 pl-4 pr-8 text-sm text-neutral-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-neutral-400"
+            className="block w-full min-w-0 max-w-full cursor-pointer appearance-none rounded-full border border-neutral-200 bg-white py-1.5 pl-3 pr-7 text-sm text-neutral-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 md:w-auto md:max-w-[240px] md:pl-4 md:pr-8"
           >
             <option value="newest">Sort by: Newest</option>
             <option value="rating">Rating: High to Low</option>

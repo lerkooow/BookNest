@@ -23,17 +23,16 @@ export const BookList = ({ filteredBooks, getStatusBadge }: BookListProps) => {
           <p className="text-lg">No books found matching your criteria</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
           {filteredBooks.map((book) => (
             <Link
               key={book.id}
               href={`/books/${book.id}`}
-              className="rounded-2xl p-4 border shadow-sm hover:shadow-md transition flex flex-col justify-between bg-white border-neutral-200/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500"
+              className="flex min-w-0 flex-col justify-between rounded-2xl border border-neutral-200/70 bg-white p-2 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500 sm:p-4"
             >
               <div>
-                {/* Cover Card */}
                 <div
-                  className={`w-full aspect-[4/5] rounded-xl p-6 flex flex-col justify-between relative overflow-hidden shadow-inner ${hasCoverImage(book.coverUrl) ? "bg-neutral-100" : (book.coverUrl ?? "bg-gradient-to-br from-amber-100 to-orange-200")}`}
+                  className={`relative flex w-full aspect-[4/5] flex-col justify-between overflow-hidden rounded-xl p-2 shadow-inner sm:p-6 ${hasCoverImage(book.coverUrl) ? "bg-neutral-100" : (book.coverUrl ?? "bg-gradient-to-br from-amber-100 to-orange-200")}`}
                 >
                   {hasCoverImage(book.coverUrl) && (
                     <Image
@@ -41,46 +40,39 @@ export const BookList = ({ filteredBooks, getStatusBadge }: BookListProps) => {
                       alt={`${book.title} cover`}
                       fill
                       unoptimized
-                      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 40vw, 25vw"
+                      sizes="(max-width: 640px) 45vw, (max-width: 1024px) 40vw, 25vw"
                       className="object-cover"
                     />
                   )}
                   <div>
                     <span
-                      className={`text-[10px] tracking-widest uppercase font-bold`}
+                      className={`text-[8px] tracking-widest uppercase font-bold md:text-[10px]`}
                     >
                       {book.genre}
                     </span>
-                    <h2 className="text-xl sm:text-2xl font-serif font-bold mt-2 leading-tight">
+                    <h2 className="mt-1 break-words text-base font-serif font-bold leading-tight sm:text-2xl">
                       {book.title}
                     </h2>
                   </div>
                 </div>
-
-                {/* Details */}
                 <div className="mt-4">
                   <h3
                     className={`font-semibold text-sm truncate text-neutral-900`}
                   >
                     {book.title}
                   </h3>
-                  <p className={`text-xs mt-0.5 text-neutral-500`}>
+                  <p className="mt-0.5 truncate text-xs text-neutral-500">
                     {book.author}
                   </p>
-                  <span
-                    className={`text-[10px] tracking-widest uppercase font-bold`}
-                  >
+                  <span className="line-clamp-2 break-words text-[10px] font-bold uppercase tracking-widest">
                     {book.genre}
                   </span>
                 </div>
               </div>
 
-              {/* Status & Rating */}
-              <div
-                className={`flex items-center justify-between mt-4 pt-3 border-t border-neutral-100`}
-              >
+              <div className="mt-3 flex items-center justify-between gap-1 border-t border-neutral-100 pt-2 sm:mt-4 sm:pt-3">
                 {getStatusBadge(book.status)}
-                <div className="flex items-center gap-1 text-xs font-semibold">
+                <div className="flex shrink-0 items-center gap-1 text-xs font-semibold">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   <span className={"text-neutral-700"}>
                     {book.rating?.toFixed(1) ?? "—"}

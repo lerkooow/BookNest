@@ -9,10 +9,7 @@ interface BooksByStatusProps {
   chartSegments: StatusChartSegment[];
 }
 
-export const BooksByStatus = ({
-  stats,
-  chartSegments,
-}: BooksByStatusProps) => (
+export const BooksByStatus = ({ stats, chartSegments }: BooksByStatusProps) => (
   <section className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
     <h2 className="mb-6 text-base font-bold text-neutral-900">
       Books by Status

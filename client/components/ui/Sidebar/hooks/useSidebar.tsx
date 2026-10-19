@@ -19,6 +19,13 @@ export const useSidebar = () => {
   }, []);
 
   useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--sidebar-width",
+      collapsed ? "76px" : "260px",
+    );
+  }, [collapsed]);
+
+  useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 

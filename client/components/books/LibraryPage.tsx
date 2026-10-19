@@ -28,20 +28,22 @@ export const LibraryPage = () => {
     switch (status) {
       case "FINISHED":
         return (
-          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600">
+          <span className="whitespace-nowrap rounded-full bg-emerald-50 px-1.5 py-1 text-[9px] font-medium text-emerald-600 sm:px-2.5 sm:text-xs">
             Finished
           </span>
         );
       case "CURRENTLY_READING":
         return (
-          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-sky-50 text-sky-600">
-            Currently Reading
+          <span className="whitespace-nowrap rounded-full bg-sky-50 px-1.5 py-1 text-[9px] font-medium text-sky-600 sm:px-2.5 sm:text-xs">
+            <span className="sm:hidden">Reading</span>
+            <span className="hidden sm:inline">Currently Reading</span>
           </span>
         );
       case "WANT_TO_READ":
         return (
-          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-500">
-            Want to Read
+          <span className="whitespace-nowrap rounded-full bg-rose-50 px-1.5 py-1 text-[9px] font-medium text-rose-500 sm:px-2.5 sm:text-xs">
+            <span className="sm:hidden">Want</span>
+            <span className="hidden sm:inline">Want to Read</span>
           </span>
         );
     }
