@@ -1,149 +1,45 @@
 "use client";
 
-import { booksApi } from "@/lib/api";
-import { Book, BookStatus } from "@/types/book";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowLeft, Star, Upload } from "lucide-react";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+
+import { ArrowLeft, ChevronDown, Star, Upload } from "lucide-react";
+
 import { ErrorModal } from "@/components/ui/ErrorModal";
+import { allowedCoverTypes, useBookEdit } from "./hooks/useBookEdit";
 
 const inputClass =
   "w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-800 shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-emerald-800 focus:ring-2 focus:ring-emerald-800/10";
-
-const genres = [
-  "Romance",
-  "Mystery, Thriller, & Crime",
-  "Fantasy & Science Fiction",
-  "Non-Fiction & Self-Help",
-  "Historical Fiction",
-  "Young Adult",
-  "Biography, Autobiography, & Memoir",
-  "Children’s Literature",
-  "Religion & Spirituality",
-  "Other",
-];
-const maxCoverSize = 2 * 1024 * 1024;
-const allowedCoverTypes = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/gif",
-];
+const selectClass = `${inputClass} appearance-none pr-10`;
 
 export const BookEditPage = ({ bookId }: { bookId: string }) => {
-  const router = useRouter();
-  const coverFileInput = useRef<HTMLInputElement>(null);
-  const [book, setBook] = useState<Book | null>(null);
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [genre, setGenre] = useState("");
-  const [description, setDescription] = useState("");
-  const [coverUrl, setCoverUrl] = useState("");
-  const [status, setStatus] = useState<BookStatus>("WANT_TO_READ");
-  const [rating, setRating] = useState("");
-  const [notes, setNotes] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    let active = true;
-
-    booksApi
-      .getById(bookId)
-      .then((result) => {
-        if (!active) return;
-        setBook(result);
-        setTitle(result.title);
-        setAuthor(result.author);
-        setGenre(result.genre);
-        setDescription(result.description ?? "");
-        setCoverUrl(result.coverUrl ?? "");
-        setStatus(result.status);
-        setRating(result.rating?.toString() ?? "");
-        setNotes(result.notes ?? "");
-      })
-      .catch((err: Error) => {
-        if (active) setError(err.message);
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [bookId]);
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!book) return;
-
-    setSaving(true);
-    setError("");
-    try {
-      await booksApi.update(book.id, {
-        title: title.trim(),
-        author: author.trim(),
-        genre: genre.trim(),
-        description: description.trim(),
-        coverUrl: coverUrl.trim(),
-        status,
-        rating: rating ? Number(rating) : null,
-        notes,
-      });
-      router.push(`/books/${book.id}`);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update book");
-      setSaving(false);
-    }
-  };
-
-  const handleStatusChange = (value: string) => {
-    if (
-      value === "WANT_TO_READ" ||
-      value === "CURRENTLY_READING" ||
-      value === "FINISHED"
-    ) {
-      setStatus(value);
-    }
-  };
-
-  const handleCoverUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file) return;
-
-    if (!allowedCoverTypes.includes(file.type)) {
-      setError("Choose a JPEG, PNG, WebP, or GIF image.");
-      return;
-    }
-    if (file.size > maxCoverSize) {
-      setError("The cover image must be 2 MB or smaller.");
-      return;
-    }
-
-    setError("");
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        setCoverUrl(reader.result);
-      } else {
-        setError("Could not read the selected image.");
-      }
-    };
-    reader.onerror = () => setError("Could not read the selected image.");
-    reader.readAsDataURL(file);
-  };
-
-  const hasCoverImage =
-    coverUrl.startsWith("data:image/") ||
-    coverUrl.startsWith("http://") ||
-    coverUrl.startsWith("https://");
-  const genreOptions =
-    genre && !genres.includes(genre) ? [genre, ...genres] : genres;
+  const {
+    book,
+    title,
+    setTitle,
+    loading,
+    author,
+    setAuthor,
+    genre,
+    setGenre,
+    description,
+    setDescription,
+    coverUrl,
+    setCoverUrl,
+    status,
+    rating,
+    setRating,
+    notes,
+    setNotes,
+    saving,
+    error,
+    handleSubmit,
+    handleStatusChange,
+    handleCoverUpload,
+    coverFileInput,
+    hasCoverImage,
+    genreOptions,
+  } = useBookEdit(bookId);
 
   if (loading) {
     return (
@@ -223,33 +119,42 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="space-y-2 text-sm font-medium text-neutral-700">
               Genre
-              <select
-                required
-                value={genre}
-                onChange={(event) => setGenre(event.target.value)}
-                className={inputClass}
-              >
-                <option value="" disabled>
-                  Select genre
-                </option>
-                {genreOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+              <span className="relative block">
+                <select
+                  required
+                  value={genre}
+                  onChange={(event) => setGenre(event.target.value)}
+                  className={selectClass}
+                >
+                  {genreOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  aria-hidden="true"
+                  className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-neutral-400"
+                />
+              </span>
             </label>
             <label className="space-y-2 text-sm font-medium text-neutral-700">
               Status
-              <select
-                value={status}
-                onChange={(event) => handleStatusChange(event.target.value)}
-                className={inputClass}
-              >
-                <option value="WANT_TO_READ">Want to Read</option>
-                <option value="CURRENTLY_READING">Currently Reading</option>
-                <option value="FINISHED">Finished</option>
-              </select>
+              <span className="relative block">
+                <select
+                  value={status}
+                  onChange={(event) => handleStatusChange(event.target.value)}
+                  className={selectClass}
+                >
+                  <option value="WANT_TO_READ">Want to Read</option>
+                  <option value="CURRENTLY_READING">Currently Reading</option>
+                  <option value="FINISHED">Finished</option>
+                </select>
+                <ChevronDown
+                  aria-hidden="true"
+                  className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-neutral-400"
+                />
+              </span>
             </label>
           </div>
 
@@ -271,7 +176,8 @@ export const BookEditPage = ({ bookId }: { bookId: string }) => {
                 className={`relative aspect-[4/5] w-36 shrink-0 overflow-hidden rounded-xl border border-black/5 shadow-inner ${
                   hasCoverImage
                     ? "bg-neutral-100"
-                    : coverUrl || "bg-gradient-to-br from-amber-100 to-orange-200"
+                    : coverUrl ||
+                      "bg-gradient-to-br from-amber-100 to-orange-200"
                 }`}
               >
                 {hasCoverImage ? (

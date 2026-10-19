@@ -4,7 +4,7 @@ export type BookStatus =
   | "CURRENTLY_READING"
   | "FINISHED";
 
-export interface Book {
+export type Book = {
   id: string;
   title: string;
   author: string;
@@ -18,7 +18,7 @@ export interface Book {
   updatedAt: string;
 }
 
-export interface CreateBookInput {
+export type CreateBookInput =  {
   title: string;
   author: string;
   genre: string;

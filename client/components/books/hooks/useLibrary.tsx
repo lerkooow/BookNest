@@ -24,9 +24,10 @@ export const useLibrary = () => {
   const [error, setError] = useState("");
 
   const genres = useMemo(
-    () => Array.from(new Set(books.map((book) => book.genre))).sort((a, b) =>
-      a.localeCompare(b),
-    ),
+    () =>
+      Array.from(new Set(books.map((book) => book.genre))).sort((a, b) =>
+        a.localeCompare(b),
+      ),
     [books],
   );
 

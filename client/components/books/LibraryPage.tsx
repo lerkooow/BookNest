@@ -41,7 +41,7 @@ export const LibraryPage = () => {
         );
       case "WANT_TO_READ":
         return (
-          <span className="whitespace-nowrap rounded-full bg-rose-50 px-1.5 py-1 text-[9px] font-medium text-rose-500 sm:px-2.5 sm:text-xs">
+          <span className="whitespace-nowrap rounded-full bg-rose-50 px-1.5 py-1 text-[9px] font-medium text-[#FF330F] sm:px-2.5 sm:text-xs">
             <span className="sm:hidden">Want</span>
             <span className="hidden sm:inline">Want to Read</span>
           </span>
